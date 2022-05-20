@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="动态规划先看代码1234567891011121314151617181920var lengthOfLIS &#x3D; function (nums) &amp;#123;    &#x2F;&#x2F; dp[i]表示必须考虑nums[i]的最长上升子序列，即nums[i]必须在子序列的末尾    const dp &#x3D; new Array(nums.length);    &#x2F;&#x2F; 只考虑nums[0]的最长上升子序列当然是本身">
+<meta property="og:type" content="article">
+<meta property="og:title" content="leetcode-最长上升子序列">
+<meta property="og:url" content="http://example.com/2022/05/20/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/index.html">
+<meta property="og:site_name" content="芒果园">
+<meta property="og:description" content="动态规划先看代码1234567891011121314151617181920var lengthOfLIS &#x3D; function (nums) &amp;#123;    &#x2F;&#x2F; dp[i]表示必须考虑nums[i]的最长上升子序列，即nums[i]必须在子序列的末尾    const dp &#x3D; new Array(nums.length);    &#x2F;&#x2F; 只考虑nums[0]的最长上升子序列当然是本身">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/themes/next/source/images/leetcode300.png">
+<meta property="og:image" content="http://example.com/themes/next/source/images/leetcode300-2.png">
+<meta property="article:published_time" content="2022-05-20T06:35:33.000Z">
+<meta property="article:modified_time" content="2022-05-20T08:34:50.902Z">
+<meta property="article:author" content="芒果">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/themes/next/source/images/leetcode300.png">
+
+<link rel="canonical" href="http://example.com/2022/05/20/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>leetcode-最长上升子序列 | 芒果园</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">芒果园</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/20/leetcode-%E6%9C%80%E9%95%BF%E4%B8%8A%E5%8D%87%E5%AD%90%E5%BA%8F%E5%88%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="芒果">
+      <meta itemprop="description" content="just do it!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="芒果园">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          leetcode-最长上升子序列
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-20 14:35:33 / 修改时间：16:34:50" itemprop="dateCreated datePublished" datetime="2022-05-20T14:35:33+08:00">2022-05-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h2><h3 id="先看代码"><a href="#先看代码" class="headerlink" title="先看代码"></a>先看代码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> lengthOfLIS = <span class="keyword">function</span> (<span class="params">nums</span>) &#123;</span><br><span class="line">    <span class="comment">// dp[i]表示必须考虑nums[i]的最长上升子序列，即nums[i]必须在子序列的末尾</span></span><br><span class="line">    <span class="keyword">const</span> dp = <span class="keyword">new</span> <span class="title class_">Array</span>(nums.<span class="property">length</span>);</span><br><span class="line">    <span class="comment">// 只考虑nums[0]的最长上升子序列当然是本身</span></span><br><span class="line">    dp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">let</span> max = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">1</span>;i&lt;dp.<span class="property">length</span>;i++) &#123;</span><br><span class="line">        <span class="comment">// dp[i]最小值为1（仅考虑自己）</span></span><br><span class="line">        dp[i] = <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// 在[0,i)之间查找小于nums[i]的值</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">let</span> j = <span class="number">0</span> ;j&lt;i;j++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[j]&lt;nums[i]) &#123;</span><br><span class="line">                <span class="comment">// nums[i]可以和j的子序列合并</span></span><br><span class="line">                dp[i] = <span class="title class_">Math</span>.<span class="title function_">max</span>(dp[i], dp[j] + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        max = <span class="title class_">Math</span>.<span class="title function_">max</span>(max, dp[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> max;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="再看步骤图"><a href="#再看步骤图" class="headerlink" title="再看步骤图"></a>再看步骤图</h3><p><img src="/../../themes/next/source/images/leetcode300.png" alt="动态规划思路"></p>
+<h3 id="复杂度"><a href="#复杂度" class="headerlink" title="复杂度"></a>复杂度</h3><p>时间复杂度O（$n^2$）<br>空间复杂度O(n)</p>
+<h2 id="贪心-二分查找"><a href="#贪心-二分查找" class="headerlink" title="贪心+二分查找"></a>贪心+二分查找</h2><h3 id="先看代码-1"><a href="#先看代码-1" class="headerlink" title="先看代码"></a>先看代码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> monotStack = [];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>;i&lt;nums.<span class="property">length</span>;i++) &#123;</span><br><span class="line">        <span class="keyword">if</span>(monotStack.<span class="property">length</span> === <span class="number">0</span>) &#123;</span><br><span class="line">             monotStack.<span class="title function_">push</span>(nums[i]);</span><br><span class="line">             <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(monotStack[monotStack.<span class="property">length</span>-<span class="number">1</span>]&lt;nums[i]) &#123;</span><br><span class="line">            monotStack.<span class="title function_">push</span>(nums[i]);</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(monotStack[monotStack.<span class="property">length</span>-<span class="number">1</span>]&gt;nums[i]) &#123;</span><br><span class="line">            <span class="comment">// 利用单调栈的性质使用二分法查找第一个比nums[i]小的数</span></span><br><span class="line">            <span class="keyword">let</span> l = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">let</span> r = monotStack.<span class="property">length</span>-<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">while</span>(l&lt;r) &#123;</span><br><span class="line">                <span class="keyword">const</span> mid = l+r+<span class="number">1</span>&gt;&gt;<span class="number">1</span>;</span><br><span class="line">                <span class="keyword">if</span>(monotStack[mid]&gt;=nums[i]) &#123;</span><br><span class="line">                    r = mid-<span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    l = mid;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(l === <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[i]&lt;=monotStack[<span class="number">0</span>]) &#123;</span><br><span class="line">                     <span class="comment">// 如果nums[i]小于或等于单调栈中所有数</span></span><br><span class="line">                    monotStack[<span class="number">0</span>] = nums[i];</span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    monotStack[<span class="number">1</span>] = nums[i];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                monotStack[l+<span class="number">1</span>] = nums[i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> monotStack.<span class="property">length</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="再看步骤图-1"><a href="#再看步骤图-1" class="headerlink" title="再看步骤图"></a>再看步骤图</h3><p><img src="/../../themes/next/source/images/leetcode300-2.png" alt="动态规划思路"></p>
+<h3 id="疑惑场景"><a href="#疑惑场景" class="headerlink" title="疑惑场景"></a>疑惑场景</h3><p>老员工：</p>
+<p>以输入序列 [0, 8, 4, 12, 2] 为例：</p>
+<ol>
+<li><p>第一步插入 0，d &#x3D; [ 0 ]；</p>
+</li>
+<li><p>第二步插入 8，d &#x3D; [0, 8]；</p>
+</li>
+<li><p>第三步插入 4，d &#x3D; [0, 4]；</p>
+</li>
+<li><p>第四步插入 12，d &#x3D; [0, 4, 12]；</p>
+</li>
+<li><p>第五步插入 2，d &#x3D; [0, 2, 12]。（看到没，[0, 2, 12]又不是nums的子序列，你这算法有问题啊）</p>
+</li>
+</ol>
+<p>老板：</p>
+<ol>
+<li>首先咱们看结果，结果是最长上升序列的长度还是3，而且从长远的角度考虑，第五步插入的新员工（2）的潜力比老员工（4）更大</li>
+<li>给你一个栗子把<ul>
+<li>如果上面的例子是这样的[0, 8, 4, 12, 2, 3, 5]</li>
+<li>第六步插入 3，d &#x3D; [0, 2, 3]</li>
+<li>第七步插入 4，d &#x3D; [0, 2, 3, 5]</li>
+</ul>
+</li>
+<li>看懂了吗，你知道怎么做了吗</li>
+</ol>
+<p>老员工：我知道了，润！！！</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/19/%E6%AD%A3%E5%88%99%E9%80%9F%E6%9F%A5/" rel="prev" title="正则速查">
+      <i class="fa fa-chevron-left"></i> 正则速查
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92"><span class="nav-number">1.</span> <span class="nav-text">动态规划</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E7%9C%8B%E4%BB%A3%E7%A0%81"><span class="nav-number">1.1.</span> <span class="nav-text">先看代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%8D%E7%9C%8B%E6%AD%A5%E9%AA%A4%E5%9B%BE"><span class="nav-number">1.2.</span> <span class="nav-text">再看步骤图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="nav-number">1.3.</span> <span class="nav-text">复杂度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%AA%E5%BF%83-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">2.</span> <span class="nav-text">贪心+二分查找</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E7%9C%8B%E4%BB%A3%E7%A0%81-1"><span class="nav-number">2.1.</span> <span class="nav-text">先看代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%8D%E7%9C%8B%E6%AD%A5%E9%AA%A4%E5%9B%BE-1"><span class="nav-number">2.2.</span> <span class="nav-text">再看步骤图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%96%91%E6%83%91%E5%9C%BA%E6%99%AF"><span class="nav-number">2.3.</span> <span class="nav-text">疑惑场景</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="芒果"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">芒果</p>
+  <div class="site-description" itemprop="description">just do it!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">芒果</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
